@@ -46,20 +46,33 @@ Markdown Source (.md)
 
 ---
 
-## 4. Installation & Setup
+## 4. Tech Stack & Core Dependencies
+
+The engine is deliberately engineered with a minimal dependency footprint—avoiding heavy external runtimes like Pandoc, Node.js, or LaTeX.
+
+| Component / Layer | Technology / Library | Purpose & Rationale |
+| :--- | :--- | :--- |
+| **AST Parser** | **Python Standard Library** (`re`, `dataclasses`) | Zero external dependencies. Fast regex tokenization of headers, callouts, tables, and inline markdown spans. |
+| **Document Compiler** | **`python-docx`** (>= 1.1.0) | OpenXML Document DOM construction. Injects custom WordprocessingML (`w:shd`, `w:tcBorders`, `w:tcMar`) for shaded callout boxes and table styling. |
+| **PDF Conversion** | **Windows Word COM** (`pywin32`) / **`docx2pdf`** | Native headless Word automation (`wdFormatPDF = 17`) ensuring 1:1 pixel-identical PDF rendering without font substitution errors. |
+| **CLI & Execution** | **Python Standard Library** (`argparse`, `pathlib`, `json`) | Standalone, token-thrifty execution across platforms without wrapper frameworks. |
+
+---
+
+## 5. Installation & Setup
 
 ```bash
 # Clone the repository
 git clone https://github.com/rohith-bn/agentic-doc-pipeline.git
 cd agentic-doc-pipeline
 
-# Install minimal dependencies
+# Install minimal dependencies (only python-docx required for Word generation)
 pip install -r requirements.txt
 ```
 
 ---
 
-## 5. CLI Usage Examples
+## 6. CLI Usage Examples
 
 ### Build Word Document (.docx) from Markdown
 ```bash
@@ -127,7 +140,7 @@ Built-in style profiles are located in `styles/`:
 
 ---
 
-## 7. Testing
+## 8. Automated Testing
 
 Run the automated unit test suite:
 ```bash
@@ -136,6 +149,6 @@ py -3 -m unittest discover -s tests
 
 ---
 
-## 8. License
+## 9. License
 
 MIT License. Authored by Rohith B Narasimhamurthy.
