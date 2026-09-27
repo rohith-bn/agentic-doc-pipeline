@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentic-doc-pipeline"
+version = "0.1.0"
+authors = [
+  { name="Rohith B Narasimhamurthy", email="rohith.bn@example.com" },
+]
+description = "Deterministic Markdown to DIN 5008 / ATS compliant DOCX and PDF converter engine for AI workflows."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Text Processing :: Markup :: Markdown",
+    "Topic :: Office/Business :: Office Suites",
+]
+dependencies = [
+    "python-docx>=1.1.0",
+]
+
+[project.scripts]
+agentic-doc = "src.cli:main"

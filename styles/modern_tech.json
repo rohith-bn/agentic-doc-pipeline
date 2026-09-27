@@ -1,0 +1,30 @@
+{
+  "name": "Modern Tech Executive",
+  "description": "High-contrast, sleek industrial engineering report styling with emerald and slate accents.",
+  "page": {
+    "margin_top_cm": 2.0,
+    "margin_bottom_cm": 2.0,
+    "margin_left_cm": 2.0,
+    "margin_right_cm": 2.0
+  },
+  "typography": {
+    "font_family": "Segoe UI",
+    "font_size_body_pt": 10.5,
+    "line_spacing": 1.15,
+    "space_after_pt": 4,
+    "headings": {
+      "h1": { "font_family": "Segoe UI", "font_size_pt": 18, "bold": true, "space_before_pt": 14, "space_after_pt": 6, "color_hex": "0369A1" },
+      "h2": { "font_family": "Segoe UI", "font_size_pt": 13.5, "bold": true, "space_before_pt": 10, "space_after_pt": 4, "color_hex": "0F172A" },
+      "h3": { "font_family": "Segoe UI", "font_size_pt": 11.5, "bold": true, "space_before_pt": 6, "space_after_pt": 2, "color_hex": "334155" }
+    }
+  },
+  "colors": {
+    "text_primary": "0F172A",
+    "text_secondary": "475569",
+    "accent": "0284C7",
+    "table_header_bg": "E2E8F0",
+    "code_bg": "F1F5F9",
+    "callout_bg": "F0F9FF",
+    "callout_border": "0284C7"
+  }
+}

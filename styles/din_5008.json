@@ -1,0 +1,30 @@
+{
+  "name": "DIN 5008 Standard",
+  "description": "German business correspondence and formal document layout.",
+  "page": {
+    "margin_top_cm": 2.0,
+    "margin_bottom_cm": 2.0,
+    "margin_left_cm": 2.5,
+    "margin_right_cm": 2.0
+  },
+  "typography": {
+    "font_family": "Calibri",
+    "font_size_body_pt": 11,
+    "line_spacing": 1.15,
+    "space_after_pt": 4,
+    "headings": {
+      "h1": { "font_family": "Calibri", "font_size_pt": 18, "bold": true, "space_before_pt": 12, "space_after_pt": 6, "color_hex": "0F172A" },
+      "h2": { "font_family": "Calibri", "font_size_pt": 14, "bold": true, "space_before_pt": 10, "space_after_pt": 4, "color_hex": "1E293B" },
+      "h3": { "font_family": "Calibri", "font_size_pt": 12, "bold": true, "space_before_pt": 6, "space_after_pt": 2, "color_hex": "334155" }
+    }
+  },
+  "colors": {
+    "text_primary": "1E293B",
+    "text_secondary": "64748B",
+    "accent": "0284C7",
+    "table_header_bg": "F1F5F9",
+    "code_bg": "F8FAFC",
+    "callout_bg": "F8FAFC",
+    "callout_border": "0284C7"
+  }
+}
