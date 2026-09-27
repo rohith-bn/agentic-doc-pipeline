@@ -22,7 +22,34 @@ else:
     from .md_parser import MarkdownParser
     from .pdf_converter import convert_docx_to_pdf
 
-STYLES_DIR = Path(__file__).resolve().parent.parent / "styles"
+PACKAGE_STYLES_DIR = Path(__file__).resolve().parent / "styles"
+ROOT_STYLES_DIR = Path(__file__).resolve().parent.parent / "styles"
+
+# Built-in fallback profile guaranteeing zero-crash operation on any system
+DEFAULT_FALLBACK_STYLE = {
+    "name": "Modern Tech Executive",
+    "page": {"margin_top_cm": 2.0, "margin_bottom_cm": 2.0, "margin_left_cm": 2.0, "margin_right_cm": 2.0},
+    "typography": {
+        "font_family": "Segoe UI",
+        "font_size_body_pt": 10.5,
+        "line_spacing": 1.15,
+        "space_after_pt": 4,
+        "headings": {
+            "h1": {"font_family": "Segoe UI", "font_size_pt": 18, "bold": True, "space_before_pt": 14, "space_after_pt": 6, "color_hex": "0369A1"},
+            "h2": {"font_family": "Segoe UI", "font_size_pt": 13.5, "bold": True, "space_before_pt": 10, "space_after_pt": 4, "color_hex": "0F172A"},
+            "h3": {"font_family": "Segoe UI", "font_size_pt": 11.5, "bold": True, "space_before_pt": 6, "space_after_pt": 2, "color_hex": "334155"}
+        }
+    },
+    "colors": {
+        "text_primary": "0F172A",
+        "text_secondary": "475569",
+        "accent": "0284C7",
+        "table_header_bg": "E2E8F0",
+        "code_bg": "F1F5F9",
+        "callout_bg": "F0F9FF",
+        "callout_border": "0284C7"
+    }
+}
 
 
 def load_style(style_arg: str) -> dict:
@@ -32,19 +59,22 @@ def load_style(style_arg: str) -> dict:
         with open(p, "r", encoding="utf-8") as f:
             return json.load(f)
 
-    # 2. Check in builtin styles directory
-    candidate = STYLES_DIR / f"{style_arg}.json"
-    if candidate.exists():
-        with open(candidate, "r", encoding="utf-8") as f:
-            return json.load(f)
+    # 2. Check in package styles directory or root styles directory
+    for s_dir in [PACKAGE_STYLES_DIR, ROOT_STYLES_DIR]:
+        candidate = s_dir / f"{style_arg}.json"
+        if candidate.exists():
+            with open(candidate, "r", encoding="utf-8") as f:
+                return json.load(f)
 
-    # 3. Default fallback to modern_tech
-    default_p = STYLES_DIR / "modern_tech.json"
-    if default_p.exists():
-        with open(default_p, "r", encoding="utf-8") as f:
-            return json.load(f)
+    # 3. Check default modern_tech in either directory
+    for s_dir in [PACKAGE_STYLES_DIR, ROOT_STYLES_DIR]:
+        default_p = s_dir / "modern_tech.json"
+        if default_p.exists():
+            with open(default_p, "r", encoding="utf-8") as f:
+                return json.load(f)
 
-    return {}
+    # 4. Infallible embedded fallback
+    return DEFAULT_FALLBACK_STYLE
 
 
 def cmd_build(args) -> int:

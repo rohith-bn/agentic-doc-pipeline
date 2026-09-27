@@ -24,3 +24,6 @@ dependencies = [
 
 [project.scripts]
 agentic-doc = "src.cli:main"
+
+[tool.setuptools.package-data]
+"src" = ["styles/*.json"]

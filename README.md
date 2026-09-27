@@ -61,13 +61,32 @@ The engine is deliberately engineered with a minimal dependency footprint—avoi
 
 ## 5. Installation & Setup
 
+Works deterministically on **Windows, macOS, and Linux** (Python 3.10+).
+
+### Option A: Install as a Global/Virtualenv CLI Tool (Recommended)
+Installing via `pip` registers the standalone `agentic-doc` executable in your terminal:
 ```bash
-# Clone the repository
 git clone https://github.com/rohith-bn/agentic-doc-pipeline.git
 cd agentic-doc-pipeline
 
-# Install minimal dependencies (only python-docx required for Word generation)
+# Install in editable mode
+pip install -e .
+
+# Now execute directly from anywhere in your shell:
+agentic-doc build --input document.md --style modern_tech
+```
+
+### Option B: Direct Script Execution (No Installation Required)
+If you prefer running without package installation:
+```bash
+git clone https://github.com/rohith-bn/agentic-doc-pipeline.git
+cd agentic-doc-pipeline
+
+# Install the single core dependency (python-docx)
 pip install -r requirements.txt
+
+# Run directly via Python:
+python src/cli.py build --input examples/sample_document.md --style din_5008
 ```
 
 ---
