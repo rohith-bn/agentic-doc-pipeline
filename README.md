@@ -110,7 +110,7 @@ py -3 src/cli.py pdf --input output/report.docx --output output/report.pdf
 
 ---
 
-## 6. Pairing with AI Coding Agents (Token Thrift & Offloading)
+## 7. Pairing with AI Coding Agents (Token Thrift & Offloading)
 
 This pipeline was designed specifically to pair with AI coding agents (Google Antigravity, Claude Code, Cursor, GitHub Copilot).
 
@@ -151,7 +151,7 @@ When asked to produce a formal document, executive summary, or PDF deliverable:
 
 ---
 
-## 7. Style Profiles
+## 8. Style Profiles
 
 Built-in style profiles are located in `styles/`:
 - **`din_5008.json`**: German business correspondence standard (2.5 cm left margin, Calibri 11pt, 1.15 line spacing).
@@ -159,7 +159,7 @@ Built-in style profiles are located in `styles/`:
 
 ---
 
-## 8. Automated Testing
+## 9. Automated Testing
 
 Run the automated unit test suite:
 ```bash
@@ -168,6 +168,16 @@ py -3 -m unittest discover -s tests
 
 ---
 
-## 9. License
+## 10. Roadmap
+
+- [x] **v0.1.0 (Current)**: Deterministic Markdown -> DOCX compiler, DIN 5008 & modern styling, callouts, tables, Word COM PDF automation, sub-second unit tests.
+- [ ] **v0.2.0 (Planned - In Design)**: **Reverse Ingestion Pipeline (`PDF -> Markdown / DOCX`)**.
+  - Ingest raw PDF documents, extract layout structure and tabular data, and emit clean, token-efficient Markdown for LLM ingestion via `pymupdf4llm`.
+  - Command interface: `agentic-doc ingest --input document.pdf --output document.md`.
+- [ ] **v0.3.0 (Planned)**: Headless Linux/macOS PDF compilation via native LibreOffice bridge.
+
+---
+
+## 11. License
 
 MIT License. Authored by Rohith B Narasimhamurthy.
