@@ -1,4 +1,9 @@
 # Agentic Document Pipeline (`agentic-doc-pipeline`)
+> **Type**: Project Overview & Architectural Specification  
+> **Status**: ACTIVE  
+> **Purpose**: Deterministic Markdown-to-DOCX and PDF converter engine specifically engineered for AI pair-programming and automated document workflows.  
+> **Target / Scope**: `Building_Tools/projects/agentic-doc-pipeline/README.md`  
+
 
 Deterministic Markdown-to-DOCX and PDF converter engine specifically engineered for AI pair-programming and automated document workflows.
 
@@ -25,6 +30,7 @@ Common markdown converters either strip styling, break on complex tables, or req
 - **Callout & Alert Rendering**: Generates shaded callout blocks with accent left borders directly inside Word.
 - **Automated Tables**: Formats markdown tables with padded cells, header backgrounds, and auto-fitting column widths.
 - **Automated PDF Export**: Windows Word COM interface automation for pixel-accurate PDF generation.
+- **Reverse Ingestion (`PDF -> Markdown`)**: High-accuracy structural ingestion from PDFs to clean GitHub Flavored Markdown and tables using PyMuPDF, with page slice filtering and image extraction.
 - **Token Thrifty CLI**: Built for both human terminal usage and agentic tool invocation.
 
 ---
@@ -32,6 +38,7 @@ Common markdown converters either strip styling, break on complex tables, or req
 ## 3. Architecture
 
 ```text
+[ Forward Pipeline: Document Generation ]
 Markdown Source (.md)
         │
         ▼
@@ -46,6 +53,18 @@ Markdown Source (.md)
 [ PDFConverter ]    ──>  Word COM / docx2pdf
         │
         └──> Output: Formatted Printable PDF (.pdf)
+
+[ Reverse Pipeline: AI Ingestion (v0.2.0) ]
+Arbitrary PDF (.pdf)
+        │
+        ▼
+[ PDFIngestor ]     ──>  PyMuPDF / pymupdf4llm
+        │
+        ├──> Layout & Table Extraction (GFM Tables)
+        ├──> Page Filtering (--pages 1-5)
+        ├──> Optional Image Extraction (--extract-images -> PNGs)
+        │
+        └──> Output: Clean, Token-Thrifty Markdown (.md)
 ```
 
 ---
@@ -59,6 +78,7 @@ The engine is deliberately engineered with a minimal dependency footprint—avoi
 | **AST Parser** | **Python Standard Library** (`re`, `dataclasses`) | Zero external dependencies. Fast regex tokenization of headers, callouts, tables, and inline markdown spans. |
 | **Document Compiler** | **`python-docx`** (>= 1.1.0) | OpenXML Document DOM construction. Injects custom WordprocessingML (`w:shd`, `w:tcBorders`, `w:tcMar`) for shaded callout boxes and table styling. |
 | **PDF Conversion** | **Windows Word COM** (`pywin32`) / **`docx2pdf`** | Native headless Word automation (`wdFormatPDF = 17`) ensuring 1:1 pixel-identical PDF rendering without font substitution errors. |
+| **Reverse Ingestion** | **`pymupdf` & `pymupdf4llm`** (Optional extra `[ingest]`) | Fast C-based PDF extraction to GitHub Flavored Markdown and tables, retaining document layout without heavy OCR runtimes. |
 | **CLI & Execution** | **Python Standard Library** (`argparse`, `pathlib`, `json`) | Standalone, token-thrifty execution across platforms without wrapper frameworks. |
 
 ---
@@ -73,11 +93,15 @@ Installing via `pip` registers the standalone `agentic-doc` executable in your t
 git clone https://github.com/rohith-bn/agentic-doc-pipeline.git
 cd agentic-doc-pipeline
 
-# Install in editable mode
+# Core forward pipeline only (Markdown -> DOCX)
 pip install -e .
+
+# Full pipeline including Reverse Ingest (PDF -> Markdown)
+pip install -e ".[ingest]"
 
 # Now execute directly from anywhere in your shell:
 agentic-doc build --input document.md --style modern_tech
+agentic-doc ingest --input document.pdf --output document.md
 ```
 
 ### Option B: Direct Script Execution (No Installation Required)
@@ -86,8 +110,11 @@ If you prefer running without package installation:
 git clone https://github.com/rohith-bn/agentic-doc-pipeline.git
 cd agentic-doc-pipeline
 
-# Install the single core dependency (python-docx)
+# Install core dependencies (python-docx)
 pip install -r requirements.txt
+
+# Optional: Install reverse ingest dependencies (PyMuPDF)
+pip install pymupdf pymupdf4llm
 
 # Run directly via Python:
 python src/cli.py build --input examples/sample_document.md --style din_5008
@@ -110,6 +137,15 @@ py -3 src/cli.py pipeline --input examples/sample_document.md --style din_5008 -
 ### Convert Existing DOCX to PDF
 ```bash
 py -3 src/cli.py pdf --input output/report.docx --output output/report.pdf
+```
+
+### Reverse Ingest: PDF to Token-Efficient Markdown (v0.2.0)
+```bash
+# Ingest PDF to clean Markdown (tables formatted as GFM)
+py -3 src/cli.py ingest --input document.pdf --output document.md
+
+# Ingest specific pages and extract embedded figures
+py -3 src/cli.py ingest --input document.pdf --output document.md --pages 1-5 --extract-images --images-dir output/images
 ```
 
 ---
@@ -174,10 +210,11 @@ py -3 -m unittest discover -s tests
 
 ## 10. Roadmap
 
-- [x] **v0.1.0 (Current)**: Deterministic Markdown -> DOCX compiler, DIN 5008 & modern styling, callouts, tables, Word COM PDF automation, sub-second unit tests.
-- [ ] **v0.2.0 (Planned - In Design)**: **Reverse Ingestion Pipeline (`PDF -> Markdown / DOCX`)**.
+- [x] **v0.1.0**: Deterministic Markdown -> DOCX compiler, DIN 5008 & modern styling, callouts, tables, Word COM PDF automation, sub-second unit tests.
+- [x] **v0.2.0 (Current)**: **Reverse Ingestion Pipeline (`PDF -> Markdown`)**.
   - Ingest raw PDF documents, extract layout structure and tabular data, and emit clean, token-efficient Markdown for LLM ingestion via `pymupdf4llm`.
   - Command interface: `agentic-doc ingest --input document.pdf --output document.md`.
+  - Scanned PDF detection, optional embedded image extraction, and page slice filtering.
 - [ ] **v0.3.0 (Planned)**: Headless Linux/macOS PDF compilation via native LibreOffice bridge.
 
 ---

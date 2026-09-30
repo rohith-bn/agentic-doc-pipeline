@@ -1,4 +1,9 @@
 # Deterministic System Architecture Report
+> **Type**: Technical Reference Document  
+> **Status**: REFERENCE  
+> **Purpose**: This document provides a deterministic overview of the real time embedded flight control loop and telemetry node architecture. Modern safety...  
+> **Target / Scope**: `Building_Tools/projects/agentic-doc-pipeline/examples/sample_document.md`  
+
 > **Prepared for**: High-Tech Engineering Steering Committee  
 > **Author**: Lead Systems Engineer  
 > **Status**: Verified & Bench Tested  

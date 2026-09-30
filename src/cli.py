@@ -139,6 +139,45 @@ def cmd_pipeline(args) -> int:
         return 0
 
 
+def cmd_ingest(args) -> int:
+    input_path = Path(args.input)
+    if not input_path.exists():
+        print(f"[ERROR] Input PDF file does not exist: {input_path}", file=sys.stderr)
+        return 1
+
+    try:
+        from src.pdf_ingest import PDFIngestor
+    except ImportError:
+        try:
+            from .pdf_ingest import PDFIngestor
+        except ImportError:
+            import sys
+            sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+            from src.pdf_ingest import PDFIngestor
+
+    try:
+        ingestor = PDFIngestor(input_path)
+        output_path = Path(args.output) if args.output else input_path.with_suffix(".md")
+        result = ingestor.ingest(
+            output_md_path=output_path,
+            extract_images=args.extract_images,
+            images_dir=args.images_dir,
+            pages=args.pages,
+        )
+
+        if result.is_scanned and result.warning:
+            print(f"[WARNING] {result.warning}", file=sys.stderr)
+
+        print(f"[SUCCESS] Ingested PDF -> Markdown: {output_path.resolve()}")
+        print(f"          Pages: {result.page_count} | Characters: {result.char_count} | Images: {result.image_count}")
+        if result.images_saved:
+            print(f"          Images saved: {len(result.images_saved)} files in disk directory")
+        return 0
+    except Exception as e:
+        print(f"[ERROR] {e}", file=sys.stderr)
+        return 1
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         prog="agentic-doc",
@@ -167,6 +206,15 @@ def main() -> int:
     p_pipe.add_argument("--output-pdf", help="Target .pdf file path.")
     p_pipe.add_argument("--no-pdf", action="store_true", help="Skip PDF generation.")
     p_pipe.set_defaults(func=cmd_pipeline)
+
+    # Subcommand: ingest
+    p_ingest = subparsers.add_parser("ingest", help="Reverse-compile PDF to clean GitHub-Flavored Markdown")
+    p_ingest.add_argument("--input", "-i", required=True, help="Input .pdf file path.")
+    p_ingest.add_argument("--output", "-o", help="Target .md file path (defaults to <input>.md).")
+    p_ingest.add_argument("--extract-images", action="store_true", help="Extract embedded PDF images to disk and link in markdown.")
+    p_ingest.add_argument("--images-dir", help="Custom directory to store extracted images (defaults to images/ next to output .md).")
+    p_ingest.add_argument("--pages", "-p", help="Page range to ingest (e.g. '1-5', '1,3,7'). Default is all pages.")
+    p_ingest.set_defaults(func=cmd_ingest)
 
     args = parser.parse_args()
     return args.func(args)
