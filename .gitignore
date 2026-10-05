@@ -9,3 +9,8 @@ output/
 *.egg-info/
 dist/
 build/
+
+# Social media and career drafts belong in the private career hub, never here
+*linkedin*
+content/linkedin/
+

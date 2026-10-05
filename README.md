@@ -8,7 +8,7 @@
 Deterministic Markdown-to-DOCX and PDF converter engine specifically engineered for AI pair-programming and automated document workflows.
 
 <p align="center">
-  <img src="assets/linkedin_infographic.jpg" alt="Computational Offloading for AI Agents - Architecture & Token Savings" width="850"/>
+  <img src="assets/agentic_doc_architecture.jpg" alt="Computational Offloading for AI Agents - Architecture & Token Savings" width="850"/>
 </p>
 
 ---
